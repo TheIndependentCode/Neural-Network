@@ -1,6 +1,6 @@
 # Neural Network From Scratch
 
-This code is part of my video on YouTube: [Neural Network from Scratch | Mathematics & Python Code](https://www.youtube.com/watch?v=pauPCy_s0Ok).
+This code is part of my video series on YouTube: [Neural Network from Scratch | Mathematics & Python Code](https://youtube.com/playlist?list=PLQ4osgQ7WN6PGnvt6tzLAVAEMsL3LBqpm).
 
 # Try it!
 
