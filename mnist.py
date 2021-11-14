@@ -5,6 +5,7 @@ from keras.utils import np_utils
 from dense import Dense
 from activations import Tanh
 from losses import mse, mse_prime
+from network import train, predict
 
 # load MNIST from server
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -34,33 +35,10 @@ network = [
     Tanh()
 ]
 
-epochs = 100
-learning_rate = 0.1
-
 # train
-for e in range(epochs):
-    error = 0
-    # train on 1000 samples, since we're not training on GPU...
-    for x, y in zip(x_train[:1000], y_train[:1000]):
-        # forward
-        output = x
-        for layer in network:
-            output = layer.forward(output)
+train(network, mse, mse_prime, x_train[:1000], y_train[:1000], epochs=100, learning_rate=0.1)
 
-        # error
-        error += mse(y, output)
-
-        # backward
-        grad = mse_prime(y, output)
-        for layer in reversed(network):
-            grad = layer.backward(grad, learning_rate)
-
-    error /= 1000
-    print('%d/%d, error=%f' % (e + 1, epochs, error))
-
-# test on 20 samples
+# test
 for x, y in zip(x_test[:20], y_test[:20]):
-    output = x
-    for layer in network:
-        output = layer.forward(output)
+    output = predict(network, x)
     print('pred:', np.argmax(output), '\ttrue:', np.argmax(y))

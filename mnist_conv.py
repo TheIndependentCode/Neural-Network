@@ -5,8 +5,9 @@ from keras.utils import np_utils
 from dense import Dense
 from convolutional import Convolutional
 from reshape import Reshape
-from activations import Tanh, Sigmoid
+from activations import Sigmoid
 from losses import binary_cross_entropy, binary_cross_entropy_prime
+from network import train, predict
 
 def preprocess_data(x, y, limit):
     zero_index = np.where(y == 0)[0][:limit]
@@ -36,32 +37,18 @@ network = [
     Sigmoid()
 ]
 
-epochs = 20
-learning_rate = 0.1
-
 # train
-for e in range(epochs):
-    error = 0
-    for x, y in zip(x_train, y_train):
-        # forward
-        output = x
-        for layer in network:
-            output = layer.forward(output)
-
-        # error
-        error += binary_cross_entropy(y, output)
-
-        # backward
-        grad = binary_cross_entropy_prime(y, output)
-        for layer in reversed(network):
-            grad = layer.backward(grad, learning_rate)
-
-    error /= len(x_train)
-    print(f"{e + 1}/{epochs}, error={error}")
+train(
+    network,
+    binary_cross_entropy,
+    binary_cross_entropy_prime,
+    x_train,
+    y_train,
+    epochs=20,
+    learning_rate=0.1
+)
 
 # test
 for x, y in zip(x_test, y_test):
-    output = x
-    for layer in network:
-        output = layer.forward(output)
+    output = predict(network, x)
     print(f"pred: {np.argmax(output)}, true: {np.argmax(y)}")
